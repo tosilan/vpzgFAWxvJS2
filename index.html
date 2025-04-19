@@ -265,7 +265,7 @@
 
             // ベースURLを取得（実際の接続ガイドページのURLに置き換えてください）
             const baseUrl = window.location.href.split('?')[0].replace('generator.html', 'index.html');
-            const generatedUrl = `${baseUrl}invite/?name=${serverName}&ip=${serverIP}&port=${serverPort}`;
+            const generatedUrl = `https://invite.svcn.pgw.jp/?name=${serverName}&ip=${serverIP}&port=${serverPort}`;
 
             document.getElementById('generatedUrl').textContent = generatedUrl;
             document.getElementById('resultContainer').style.display = 'block';
