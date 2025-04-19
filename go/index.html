@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイクラサーバー接続完全ガイド - 10ステップで簡単接続</title>
+    <meta name="description" content="Minecraftクロスプラットフォームサーバーへの接続方法を10ステップでわかりやすく解説">
+    <style>
+        :root {
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-color: #ffffff;
+            --button-bg: linear-gradient(45deg, #6a11cb, #2575fc);
+            --minecraft-green: #5B8C3A;
+            --minecraft-dark: #3B5C2A;
+            --warning-bg: rgba(255, 213, 79, 0.2);
+            --copy-btn-bg: rgba(255, 255, 255, 0.1);
+            --link-color: #4fc3f7;
+            --gradient-start: #ffebee;
+            --gradient-end: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(to bottom, var(--gradient-start), var(--gradient-end));
+            color: #333;
+            line-height: 1.7;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: #d32f2f;
+        }
+
+        .step-grid {
+            display: grid;
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #d32f2f;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            margin: 0;
+            color: #d32f2f;
+        }
+
+        .step-image {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            background: #f5f5f5;
+        }
+
+        .step-image img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+            max-height: 300px;
+        }
+
+        .info-panel {
+            background: #f5f5f5;
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin: 1.2rem 0;
+        }
+
+        .warning-panel {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .copy-section {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            margin: 0.8rem 0;
+            flex-wrap: wrap;
+        }
+
+        .copy-input {
+            background: white;
+            border: 1px solid #e0e0e0;
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .copy-button {
+            background: transparent;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .copy-button:hover {
+            background: rgba(211, 47, 47, 0.1);
+        }
+
+        a {
+            color: #d32f2f;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .support-section {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 1.5rem;
+        }
+
+        .support-button {
+            background: #d32f2f;
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .support-button:hover {
+            transform: translateY(-2px);
+            background: #b71c1c;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .credit {
+            margin-bottom: 0.5rem;
+        }
+
+        .credit a {
+            color: #d32f2f;
+            text-decoration: none;
+            border-bottom: 1px dashed currentColor;
+        }
+
+        .additional-credits {
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            color: #999;
+        }
+
+        /* ポップアップ通知 */
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4caf50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-notification.show {
+            opacity: 1;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+            .step-card {
+                grid-template-columns: 1fr;
+                padding: 1.2rem;
+                gap: 1rem;
+            }
+
+            .step-image {
+                order: -1;
+                min-height: 150px;
+            }
+
+            .container {
+                padding: 0.8rem;
+            }
+
+            .header {
+                padding: 1.5rem 0;
+            }
+        }
+
+        /* アニメーション */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-card {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .step-card:nth-child(1) { animation-delay: 0.1s; }
+        .step-card:nth-child(2) { animation-delay: 0.2s; }
+        .step-card:nth-child(3) { animation-delay: 0.3s; }
+        .step-card:nth-child(4) { animation-delay: 0.4s; }
+        .step-card:nth-child(5) { animation-delay: 0.5s; }
+        .step-card:nth-child(6) { animation-delay: 0.6s; }
+        .step-card:nth-child(7) { animation-delay: 0.7s; }
+        .step-card:nth-child(8) { animation-delay: 0.8s; }
+        .step-card:nth-child(9) { animation-delay: 0.9s; }
+        .step-card:nth-child(10) { animation-delay: 1.0s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 マイクラサーバー接続完全ガイド</h1>
+            <p>10ステップで簡単接続！ Switch/Xbox/PlayStation対応の参加方法</p>
+        </div>
+
+        <div class="step-grid">
+            <!-- ステップ1 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">プレイを押します</h3>
+                    </div>
+                    <p>Minecraftを起動し「プレイ」ボタンを選択</p>
+                </div>
+                <div class="step-image">
+                    <img src="images/1.png" alt="ステップ１の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ2 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">クロスプラットフォームを検索を押します</h3>
+                    </div>
+                    <p>フレンドから「クロスプラットフォームを検索」を選択</p>
+                    <p>新UIをお使いの方は「ぷれいやーをけんさく」を押します。</p>
+                </div>
+                <div class="step-image">
+                    <img src="images/2.png" alt="ステップ２の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ3 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">ゲーマータグを入力</h3>
+                    </div>
+                    <p>サーバー追加用のゲーマータグを入力してください</p>
+                    <p>ゲーマータグは<a href="https://www.svcn.pgw.jp/gemertag.html" target="_blank">こちら</a>から確認してください。</p>
+                </div>
+                <div class="step-image">
+                <img src="images/3.png" alt="ステップ３の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ4 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">フレンドを追加を押します</h3>
+                    </div>
+                    <p>ゲーマータグを入力後、「フレンドを追加」ボタンを押します</p>
+                </div>
+                <div class="step-image">
+                <img src="images/4.png" alt="ステップ４の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ5 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <h3 class="step-title">追加フレンドからゲームに参加します</h3>
+                    </div>
+                    <p>フレンドリストから追加したフレンドを選択し、「ゲームに参加」を押します</p>
+                    <p>※新UIの場合はフレンドから参加を押してください</p>
+                    <p>※フレンド追加から参加まで時間がかかります</p>
+                </div>
+                <div class="step-image">
+                <img src="images/5.png" alt="ステップ５の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ6 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <h3 class="step-title">コンパスを右クリック</h3>
+                    </div>
+                    <p>ゲーム内でコンパスを右クリックしてサーバーリストを表示</p>
+                </div>
+                <div class="step-image">
+                    <img src="images/6.png" alt="ステップ６の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ7 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">7</div>
+                        <h3 class="step-title">サーバーを追加を押します</h3>
+                    </div>
+                    <p>サーバーリスト画面で「サーバーを追加」ボタンを押します</p>
+                </div>
+                <div class="step-image">
+                    <img src="images/7.png" alt="ステップ７の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ8 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">8</div>
+                        <h3 class="step-title">サーバー情報を入力</h3>
+                    </div>
+                    <p>以下の情報を入力してサーバーを追加します</p>
+                    <p>※説明は任意で入力してください</p>
+
+                    <div class="info-panel">
+                        <div class="copy-section">
+                            <strong>IPアドレス:</strong>
+                            <input type="text" class="copy-input" id="serverIP" value="mc.example.com" readonly>
+                            <button class="copy-button" data-target="serverIP">コピー</button>
+                        </div>
+                        <div class="copy-section">
+                            <strong>ポート番号:</strong>
+                            <input type="text" class="copy-input" id="serverPort" value="19132" readonly>
+                            <button class="copy-button" data-target="serverPort">コピー</button>
+                        </div>
+                        <div class="copy-section">
+                            <strong>サーバー名:</strong>
+                            <input type="text" class="copy-input" id="serverName" value="サンプルサーバー" readonly>
+                            <button class="copy-button" data-target="serverName">コピー</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-image">
+                    <img src="images/8.png" alt="ステップ８の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ9 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">9</div>
+                        <h3 class="step-title">保存するをオンまたはオフにする</h3>
+                    </div>
+                    <p>「保存する」オプションを設定します</p>
+                    <div class="info-panel">
+                        <p><strong>※オンにするとリストに保存され今後からも参加できます</strong></p>
+                        <p>頻繁に参加するサーバーの場合はオンにしておくことをおすすめします</p>
+                    </div>
+                </div>
+                <div class="step-image">
+                    <img src="images/9.png" alt="ステップ９の画像" loading="lazy">
+                </div>
+            </div>
+
+            <!-- ステップ10 -->
+            <div class="step-card">
+                <div class="step-content">
+                    <div class="step-header">
+                        <div class="step-number">10</div>
+                        <h3 class="step-title">登録するを押してサーバーへ参加！</h3>
+                    </div>
+                    <p>「登録する」ボタンを押してサーバーに接続します</p>
+                    <div class="warning-panel">
+                        <p>初回接続時はリソースのダウンロードに時間がかかる場合があります</p>
+                    </div>
+                </div>
+                <div class="step-image">
+                <img src="images/10.png" alt="ステップ１０の画像" loading="lazy">
+                </div>
+            </div>
+        </div>
+
+        <div class="support-section">
+            <h2>接続に問題がありますか？</h2>
+            <p>Discordサポートサーバーでお助けします</p>
+            <a href="https://discord.com/invite/SQgnDhEbgc" class="support-button" target="_blank" rel="noopener noreferrer">
+                🎮 サポートサーバーに参加
+            </a>
+        </div>
+
+        <div class="footer">
+            <p class="credit">© <span id="currentYear"></span> Minecraftサーバー接続ガイド - Powered by <a href="https://www.svcn.pgw.jp/" target="_blank" rel="noopener noreferrer">MCEasyLink</a></p>
+            <div class="additional-credits">
+            </div>
+        </div>
+    </div>
+
+    <!-- コピー通知ポップアップ -->
+    <div class="copy-notification" id="copyNotification">コピーしました！</div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // URLパラメータからサーバー情報を取得
+        const urlParams = new URLSearchParams(window.location.search);
+        const serverName = urlParams.get('name');
+        const serverIP = urlParams.get('ip');
+        const serverPort = urlParams.get('port');
+
+        // サーバー情報があれば表示を更新
+        if (serverName) {
+            document.getElementById('serverName').value = decodeURIComponent(serverName);
+        }
+        if (serverIP) {
+            document.getElementById('serverIP').value = decodeURIComponent(serverIP);
+        }
+        if (serverPort) {
+            document.getElementById('serverPort').value = decodeURIComponent(serverPort);
+        }
+
+        // 現在の年を表示
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // コピーボタン機能
+        document.querySelectorAll('.copy-button').forEach(button => {
+            button.addEventListener('click', async () => {
+                const targetId = button.dataset.target;
+                const targetElement = document.getElementById(targetId);
+                const textToCopy = targetElement.value || targetElement.textContent;
+
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+
+                    // ポップアップ通知を表示
+                    const notification = document.getElementById('copyNotification');
+                    notification.classList.add('show');
+
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 2000);
+
+                } catch (err) {
+                    console.error('コピーに失敗しました:', err);
+                    const notification = document.getElementById('copyNotification');
+                    notification.textContent = 'コピーに失敗しました';
+                    notification.style.background = '#f44336';
+                    notification.classList.add('show');
+
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        notification.textContent = 'コピーしました！';
+                        notification.style.background = '#4caf50';
+                    }, 2000);
+                }
+            });
+        });
+
+        // アニメーションの遅延を動的に設定
+        document.querySelectorAll('.step-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1 + 0.1}s`;
+        });
+    });
+    </script>
+</body>
+</html>

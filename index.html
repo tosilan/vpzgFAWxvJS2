@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイクラサーバーURL生成ツール</title>
+    <meta name="description" content="Minecraftサーバー接続情報のURLパラメータを生成するツール">
+    <style>
+        :root {
+            --text-color: #333;
+            --button-bg: #d32f2f;
+            --button-hover: #b71c1c;
+            --input-border: #e0e0e0;
+            --panel-bg: #f5f5f5;
+            --warning-bg: #fff8e1;
+            --warning-border: #ffc107;
+            --link-color: #d32f2f;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(to bottom, #ffebee, #ffffff);
+            color: var(--text-color);
+            line-height: 1.7;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--button-bg);
+        }
+
+        .generator-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--button-bg);
+            box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+        }
+
+        .generate-button {
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin: 2rem 0;
+            transition: background 0.3s ease;
+        }
+
+        .generate-button:hover {
+            background: var(--button-hover);
+        }
+
+        .result-panel {
+            background: var(--panel-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            position: relative;
+        }
+
+        .result-url {
+            word-break: break-all;
+            font-family: monospace;
+            padding: 0.75rem;
+            background: white;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            margin-top: 0.5rem;
+        }
+
+        .copy-button {
+            background: transparent;
+            color: var(--button-bg);
+            border: 1px solid var(--button-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .copy-button:hover {
+            background: rgba(211, 47, 47, 0.1);
+        }
+
+        .warning-panel {
+            background: var(--warning-bg);
+            border-left: 4px solid var(--warning-border);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .credit {
+            margin-bottom: 0.5rem;
+        }
+
+        .credit a {
+            color: var(--link-color);
+            text-decoration: none;
+            border-bottom: 1px dashed currentColor;
+        }
+
+        /* ポップアップ通知 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4caf50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.8rem;
+            }
+
+            .header {
+                padding: 1.5rem 0;
+            }
+
+            .generator-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 マイクラサーバーURL生成ツール</h1>
+            <p>サーバー接続情報を含むURLを簡単に生成</p>
+        </div>
+
+        <div class="generator-card">
+            <div class="form-group">
+                <label for="serverName">サーバー名</label>
+                <input type="text" id="serverName" placeholder="例: サンプルサーバー">
+            </div>
+
+            <div class="form-group">
+                <label for="serverIP">IPアドレス</label>
+                <input type="text" id="serverIP" placeholder="例: 123.45.67.89 または mc.example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="serverPort">ポート番号</label>
+                <input type="text" id="serverPort" placeholder="例: 19132" value="19132">
+            </div>
+
+            <div class="warning-panel">
+                <strong>注意:</strong> このURLを共有すると、サーバー情報が含まれます。信頼できる相手のみに共有してください。
+            </div>
+
+            <button class="generate-button" id="generateButton">URLを生成</button>
+
+            <div id="resultContainer" style="display: none;">
+                <h3>生成されたURL</h3>
+                <p>このURLを共有すると、サーバー情報が自動入力された状態で接続ガイドが表示されます</p>
+
+                <div class="result-panel">
+                    <div class="result-url" id="generatedUrl"></div>
+                    <button class="copy-button" id="copyUrlButton">URLをコピー</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="credit">© <span id="currentYear"></span> MinecraftサーバーURL生成ツール - Powered by <a href="https://www.svcn.pgw.jp/" target="_blank" rel="noopener noreferrer">MCEasyLink</a></p>
+        </div>
+    </div>
+
+    <!-- 通知ポップアップ -->
+    <div class="notification" id="notification">コピーしました！</div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 現在の年を表示
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // URL生成ボタン
+        document.getElementById('generateButton').addEventListener('click', () => {
+            const serverName = encodeURIComponent(document.getElementById('serverName').value.trim());
+            const serverIP = encodeURIComponent(document.getElementById('serverIP').value.trim());
+            const serverPort = encodeURIComponent(document.getElementById('serverPort').value.trim());
+
+            if (!serverName || !serverIP || !serverPort) {
+                showNotification('すべてのフィールドを入力してください', 'error');
+                return;
+            }
+
+            // ベースURLを取得（実際の接続ガイドページのURLに置き換えてください）
+            const baseUrl = window.location.href.split('?')[0].replace('generator.html', 'index.html');
+            const generatedUrl = `${baseUrl}invite/?name=${serverName}&ip=${serverIP}&port=${serverPort}`;
+
+            document.getElementById('generatedUrl').textContent = generatedUrl;
+            document.getElementById('resultContainer').style.display = 'block';
+
+            // 生成されたURLまでスクロール
+            document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // URLコピーボタン
+        document.getElementById('copyUrlButton').addEventListener('click', () => {
+            const url = document.getElementById('generatedUrl').textContent;
+            if (!url) return;
+
+            navigator.clipboard.writeText(url).then(() => {
+                showNotification('URLをコピーしました！');
+            }).catch(err => {
+                console.error('コピーに失敗しました:', err);
+                showNotification('コピーに失敗しました', 'error');
+            });
+        });
+
+        // 通知を表示する関数
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+
+            if (type === 'error') {
+                notification.style.background = '#f44336';
+            } else {
+                notification.style.background = '#4caf50';
+            }
+
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    });
+    </script>
+</body>
+</html>
