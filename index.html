@@ -183,6 +183,89 @@
             opacity: 1;
         }
 
+        /* トグルスイッチ */
+        .toggle-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .toggle-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--button-bg);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* ローディングスピナー */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .generate-button.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .button-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         /* モバイル対応 */
         @media (max-width: 768px) {
             .container {
@@ -222,11 +305,24 @@
                 <input type="text" id="serverPort" placeholder="例: 19132" value="19132">
             </div>
 
+            <div class="toggle-container">
+                <span class="toggle-label">サーバーの状態を表示する</span>
+                <label class="switch">
+                    <input type="checkbox" id="serverStatusToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
             <div class="warning-panel">
                 <strong>注意:</strong> このURLを共有すると、サーバー情報が含まれます。信頼できる相手のみに共有してください。
             </div>
 
-            <button class="generate-button" id="generateButton">URLを生成</button>
+            <button class="generate-button" id="generateButton">
+                <div class="button-content">
+                    <div class="loading-spinner" id="loadingSpinner"></div>
+                    <span>URLを生成</span>
+                </div>
+            </button>
 
             <div id="resultContainer" style="display: none;">
                 <h3>生成されたURL</h3>
@@ -253,25 +349,47 @@
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         // URL生成ボタン
-        document.getElementById('generateButton').addEventListener('click', () => {
-            const serverName = encodeURIComponent(document.getElementById('serverName').value.trim());
-            const serverIP = encodeURIComponent(document.getElementById('serverIP').value.trim());
-            const serverPort = encodeURIComponent(document.getElementById('serverPort').value.trim());
+        const generateButton = document.getElementById('generateButton');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        generateButton.addEventListener('click', () => {
+            // ローディング表示を開始
+            generateButton.classList.add('loading');
+            loadingSpinner.style.display = 'block';
+            
+            // 少し遅延させてから処理を実行（UX向上のため）
+            setTimeout(() => {
+                const serverName = encodeURIComponent(document.getElementById('serverName').value.trim());
+                const serverIP = encodeURIComponent(document.getElementById('serverIP').value.trim());
+                const serverPort = encodeURIComponent(document.getElementById('serverPort').value.trim());
+                const showStatus = document.getElementById('serverStatusToggle').checked;
 
-            if (!serverName || !serverIP || !serverPort) {
-                showNotification('すべてのフィールドを入力してください', 'error');
-                return;
-            }
+                if (!serverName || !serverIP || !serverPort) {
+                    showNotification('すべてのフィールドを入力してください', 'error');
+                    // ローディング表示を停止
+                    generateButton.classList.remove('loading');
+                    loadingSpinner.style.display = 'none';
+                    return;
+                }
 
-            // ベースURLを取得（実際の接続ガイドページのURLに置き換えてください）
-            const baseUrl = window.location.href.split('?')[0].replace('generator.html', 'index.html');
-            const generatedUrl = `https://invite.svcn.pgw.jp/go/?name=${serverName}&ip=${serverIP}&port=${serverPort}`;
+                // ベースURLを取得
+                const baseUrl = window.location.href.split('?')[0].replace('generator.html', 'index.html');
+                let generatedUrl = `https://invite.svcn.pgw.jp/go/?name=${serverName}&ip=${serverIP}&port=${serverPort}`;
+                
+                if (showStatus) {
+                    generatedUrl += '&list=on';
+                }
 
-            document.getElementById('generatedUrl').textContent = generatedUrl;
-            document.getElementById('resultContainer').style.display = 'block';
+                document.getElementById('generatedUrl').textContent = generatedUrl;
+                document.getElementById('resultContainer').style.display = 'block';
 
-            // 生成されたURLまでスクロール
-            document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
+                // ローディング表示を停止
+                generateButton.classList.remove('loading');
+                loadingSpinner.style.display = 'none';
+
+                // 生成されたURLまでスクロール
+                document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
+            }, 300); // 0.3秒の遅延
         });
 
         // URLコピーボタン
