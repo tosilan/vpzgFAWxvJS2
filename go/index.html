@@ -45,6 +45,149 @@
             color: #d32f2f;
         }
 
+        /* サーバー情報スタイル */
+        .server-info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+            animation-delay: 0.05s;
+        }
+
+        .server-info-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .server-icon-circle {
+            width: 40px;
+            height: 40px;
+            background: #d32f2f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .server-icon {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .server-name {
+            margin: 0;
+            color: #d32f2f;
+            font-size: 1.2rem;
+        }
+
+        .server-status-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .status-pill {
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: fit-content;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .online {
+            background-color: #4CAF50;
+        }
+
+        .offline {
+            background-color: #F44336;
+        }
+
+        .server-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .server-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .server-detail-label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .server-detail-value {
+            color: #333;
+        }
+
+        /* 更新ボタンのスタイル修正 */
+        .refresh-button-container {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 1rem;
+        }
+
+        .refresh-button {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;  /* flex → inline-flex に変更 */
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            padding: 0 15px;
+            line-height: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            gap: 8px;
+        }
+
+        .refresh-button:hover {
+            background: #d32f2f;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .refresh-button i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .refresh-button.rotating i {
+            animation: rotate 1s linear infinite;
+        }
+
+        .refresh-button span {
+            font-size: 1rem;      /* 文字サイズ */
+            margin-left: 0.5rem;  /* アイコンとの間隔 */
+            font-weight: bold;    /* 太字 */       
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         .step-grid {
             display: grid;
             gap: 1.5rem;
@@ -154,6 +297,20 @@
             background: rgba(211, 47, 47, 0.1);
         }
 
+        .generate-url-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 1px dashed #d32f2f;
+        }
+
+        .generate-url-link:hover {
+            text-decoration: none;
+            border-bottom: 1px solid #d32f2f;
+        }
+
         a {
             color: #d32f2f;
             text-decoration: none;
@@ -216,7 +373,7 @@
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #4caf50;
+            background: #6FA8DC;
             color: white;
             padding: 12px 24px;
             border-radius: 4px;
@@ -261,10 +418,15 @@
             margin: 1.5rem 0 1rem;
             color: #d32f2f;
             font-size: 1.4rem;
+            font-weight: bold;
         }
 
         /* モバイル対応 */
         @media (max-width: 768px) {
+            .server-info-card {
+                padding: 1.2rem;
+            }
+
             .step-card {
                 grid-template-columns: 1fr;
                 padding: 1.2rem;
@@ -316,12 +478,49 @@
         .step-card:nth-child(9) { animation-delay: 0.9s; }
         .step-card:nth-child(10) { animation-delay: 1.0s; }
     </style>
+    <!-- Font Awesome for server icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1 id="dynamicTitle">🎮 マイクラサーバー接続完全ガイド</h1>
             <p>10ステップで簡単接続！ Switch/Xbox/PlayStation対応の参加方法</p>
+        </div>
+
+        <!-- サーバー情報カード - listパラメータがonの時のみ表示 -->
+        <div class="server-info-card" id="serverInfoCard" style="display: none;">
+            <div class="server-info-header">
+                <div class="server-icon-circle">
+                    <i class="fas fa-server server-icon"></i>
+                </div>
+                <h2 class="server-name">サーバー情報</h2>
+            </div>
+
+            <div class="server-status-container">
+                <div class="status-pill">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="serverStatusText">ステータス確認中...</span>
+                </div>
+            </div>
+
+            <div class="server-details">
+                <div class="server-detail-item">
+                    <span class="server-detail-label">バージョン:</span>
+                    <span class="server-detail-value" id="serverInfoVersion">確認中...</span>
+                </div>
+                <div class="server-detail-item">
+                    <span class="server-detail-label">プレイヤー:</span>
+                    <span class="server-detail-value" id="serverInfoPlayers">確認中...</span>
+                </div>
+            </div>
+
+            <div class="refresh-button-container">
+                <button class="refresh-button" id="refreshServerStatus" title="ステータス更新">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>更新する</span>
+                </button>
+            </div>
         </div>
 
         <div class="step-grid">
@@ -450,7 +649,7 @@
                         </div>
                         <div class="copy-section">
                             <strong>サーバー名:</strong>
-                            <input type="text" class="copy-input" id="serverName" value="サンプルサーバー" readonly>
+                            <input type="text" class="copy-input" id="serverName" value="マイクラ日本サーバー" readonly>
                             <button class="copy-button" data-target="serverName">コピー</button>
                         </div>
                     </div>
@@ -514,6 +713,7 @@
 
         <div class="footer">
             <p class="credit">© <span id="currentYear"></span> Minecraftサーバー接続ガイド - Powered by <a href="https://www.svcn.pgw.jp/" target="_blank" rel="noopener noreferrer">MCEasyLink</a></p>
+            <a href="#" class="generate-url-link" id="generateUrlLink">URLを生成</a>
             <div class="additional-credits">
             </div>
         </div>
@@ -524,32 +724,66 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // URLパラメータから情報を取得
+        // URLパラメータからサーバー情報を取得
         const urlParams = new URLSearchParams(window.location.search);
-        const serverName = urlParams.get('name');
-        const serverIP = urlParams.get('ip');
-        const serverPort = urlParams.get('port');
+        const serverIP = urlParams.get('ip') || 'mc.example.com';
+        const serverPort = urlParams.get('port') || '19132';
+        const serverName = urlParams.get('name') || 'マイクラ日本サーバー';
+        const showServerList = urlParams.get('list') === 'on';
 
-        // タイトルとページ名を更新
-        if (serverName) {
-            const decodedName = decodeURIComponent(serverName);
-            document.getElementById('dynamicTitle').textContent = `🎮 ${decodedName} 接続ガイド`;
-            document.getElementById('pageTitle').textContent = `${decodedName} 接続ガイド - マイクラサーバー接続方法`;
+        // サーバー情報を表示
+        document.getElementById('serverIP').value = serverIP;
+        document.getElementById('serverPort').value = serverPort;
+        document.getElementById('serverName').value = serverName;
+
+        // サーバー情報カードの表示制御
+        const serverInfoCard = document.getElementById('serverInfoCard');
+        if (showServerList) {
+            serverInfoCard.style.display = 'block';
         }
 
-        // サーバー情報を更新
-        if (serverName) {
-            document.getElementById('serverName').value = decodeURIComponent(serverName);
-        }
-        if (serverIP) {
-            document.getElementById('serverIP').value = decodeURIComponent(serverIP);
-        }
-        if (serverPort) {
-            document.getElementById('serverPort').value = decodeURIComponent(serverPort);
+        // タイトルにサーバー名を反映
+        if (urlParams.get('name')) {
+            document.getElementById('dynamicTitle').textContent = `🎮 ${serverName} 接続ガイド`;
+            document.getElementById('pageTitle').textContent = `${serverName} - マイクラサーバー接続ガイド`;
         }
 
         // 現在の年を表示
         document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // サーバーステータスの初期表示
+        document.getElementById('serverStatusText').textContent = 'ステータス確認中...';
+        document.getElementById('serverInfoPlayers').textContent = '確認中...';
+        document.getElementById('serverInfoVersion').textContent = '確認中...';
+
+        // サーバーステータスを取得
+        fetchServerStatus(serverIP, serverPort);
+
+        // 更新ボタンのイベントリスナー
+        document.getElementById('refreshServerStatus').addEventListener('click', () => {
+            document.getElementById('serverStatusText').textContent = '更新中...';
+            document.getElementById('statusDot').className = 'status-dot';
+            document.getElementById('serverInfoPlayers').textContent = '更新中...';
+            document.getElementById('serverInfoVersion').textContent = '更新中...';
+
+            // 回転アニメーションを追加
+            const refreshIcon = document.querySelector('#refreshServerStatus i');
+            refreshIcon.classList.add('rotating');
+
+            fetchServerStatus(serverIP, serverPort).finally(() => {
+                // アニメーション終了
+                refreshIcon.classList.remove('rotating');
+            });
+        });
+
+        // URL生成リンクのイベントリスナー
+        document.getElementById('generateUrlLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(serverName)}&ip=${encodeURIComponent(serverIP)}&port=${encodeURIComponent(serverPort)}&list=on`;
+            navigator.clipboard.writeText(url).then(() => {
+                showCopyNotification('URLをコピーしました！');
+            });
+        });
 
         // コピーボタン機能
         document.querySelectorAll('.copy-button').forEach(button => {
@@ -560,27 +794,10 @@
 
                 try {
                     await navigator.clipboard.writeText(textToCopy);
-
-                    // ポップアップ通知を表示
-                    const notification = document.getElementById('copyNotification');
-                    notification.classList.add('show');
-
-                    setTimeout(() => {
-                        notification.classList.remove('show');
-                    }, 2000);
-
+                    showCopyNotification('コピーしました！');
                 } catch (err) {
                     console.error('コピーに失敗しました:', err);
-                    const notification = document.getElementById('copyNotification');
-                    notification.textContent = 'コピーに失敗しました';
-                    notification.style.background = '#f44336';
-                    notification.classList.add('show');
-
-                    setTimeout(() => {
-                        notification.classList.remove('show');
-                        notification.textContent = 'コピーしました！';
-                        notification.style.background = '#4caf50';
-                    }, 2000);
+                    showCopyNotification('コピーに失敗しました', true);
                 }
             });
         });
@@ -590,6 +807,78 @@
             card.style.animationDelay = `${index * 0.1 + 0.1}s`;
         });
     });
+
+    // サーバーステータスを取得する関数
+    async function fetchServerStatus(ip, port) {
+        const timeout = 5000;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+        try {
+            const apiUrl = `https://api.mcsrvstat.us/bedrock/3/${ip}:${port}`;
+            const response = await fetch(apiUrl, {
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            updateServerStatus(data);
+        } catch (error) {
+            console.error('サーバーステータスの取得に失敗しました:', error);
+            handleStatusError();
+        }
+    }
+
+    // サーバーステータスを更新する関数
+    function updateServerStatus(data) {
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('serverStatusText');
+        const playersCount = document.getElementById('serverInfoPlayers');
+        const serverVersion = document.getElementById('serverInfoVersion');
+
+        if (data.online) {
+            statusDot.classList.add('online');
+            statusText.textContent = '現在オンライン';
+
+            if (data.players) {
+                playersCount.textContent = `${data.players.online}/${data.players.max}`;
+            } else {
+                playersCount.textContent = '情報なし';
+            }
+
+            if (data.version) {
+                serverVersion.textContent = data.version;
+            } else {
+                serverVersion.textContent = '不明';
+            }
+        } else {
+            handleStatusError();
+        }
+    }
+
+    // エラー処理用関数
+    function handleStatusError() {
+        document.getElementById('statusDot').className = 'status-dot offline';
+        document.getElementById('serverStatusText').textContent = '現在オフライン';
+        document.getElementById('serverInfoPlayers').textContent = '不明';
+        document.getElementById('serverInfoVersion').textContent = '不明';
+    }
+
+    // コピー通知を表示する関数
+    function showCopyNotification(message, isError = false) {
+        const notification = document.getElementById('copyNotification');
+        notification.textContent = message;
+        notification.style.background = isError ? '#f44336' : '#4caf50';
+        notification.classList.add('show');
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 2000);
+    }
     </script>
 </body>
 </html>
