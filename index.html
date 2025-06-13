@@ -1,10 +1,57 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" itemscope itemtype="http://schema.org/WebApplication">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraftサーバー共有ツール</title>
-    <meta name="description" content="MCEasyLinkが運営する､たった5ステップでサーバーを共有できるツール🔌">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Minecraftサーバー共有ツール | 簡単URL生成で友達と接続</title>
+    <meta name="description" content="MCEasyLinkのMinecraftサーバー共有ツールで、5ステップでサーバー接続URLを生成。IPアドレスとポート番号を含む接続情報を簡単共有。統合版対応。">
+    <meta name="keywords" content="Minecraft,マインクラフト,サーバー共有,接続URL生成,IPアドレス,ポート番号,マルチプレイ">
+    <meta name="author" content="MCEasyLink">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://invite.svcn.pgw.jp/">
+    
+    <!-- OGP / Social Media Meta Tags -->
+    <meta property="og:title" content="Minecraftサーバー共有ツール | 簡単URL生成で友達と接続">
+    <meta property="og:description" content="MCEasyLinkのMinecraftサーバー共有ツールで、5ステップでサーバー接続URLを生成。IPアドレスとポート番号を含む接続情報を簡単共有。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://invite.svcn.pgw.jp/">
+    <meta property="og:image" content="https://invite.svcn.pgw.jp/images/ogp-image.jpg">
+    <meta property="og:site_name" content="Minecraftサーバー共有ツール">
+    <meta property="og:locale" content="ja_JP">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Minecraftサーバー共有ツール | 簡単URL生成で友達と接続">
+    <meta name="twitter:description" content="MCEasyLinkのMinecraftサーバー共有ツールで、5ステップでサーバー接続URLを生成。IPアドレスとポート番号を含む接続情報を簡単共有。">
+    <meta name="twitter:image" content="https://invite.svcn.pgw.jp/images/twitter-card.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Minecraftサーバー共有ツール",
+      "description": "MCEasyLinkのMinecraftサーバー共有ツールで、5ステップでサーバー接続URLを生成。IPアドレスとポート番号を含む接続情報を簡単共有。",
+      "url": "https://invite.svcn.pgw.jp/",
+      "applicationCategory": "Game",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      },
+      "creator": {
+        "@type": "Organization",
+        "name": "MCEasyLink"
+      }
+    }
+    </script>
+    
     <style>
         :root {
             --text-color: #333;
@@ -284,64 +331,69 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎮 マイクラサーバーURL生成ツール</h1>
-            <p>サーバー接続情報を含むURLを簡単に生成</p>
-        </div>
+        <header class="header" role="banner">
+            <h1 itemprop="name">🎮 マイクラサーバーURL生成ツール</h1>
+            <p itemprop="description">サーバー接続情報を含むURLを簡単に生成 - Java版・統合版対応</p>
+        </header>
 
-        <div class="generator-card">
-            <div class="form-group">
-                <label for="serverName">サーバー名</label>
-                <input type="text" id="serverName" placeholder="例: サンプルサーバー">
-            </div>
-
-            <div class="form-group">
-                <label for="serverIP">IPアドレス</label>
-                <input type="text" id="serverIP" placeholder="例: 123.45.67.89 または mc.example.com">
-            </div>
-
-            <div class="form-group">
-                <label for="serverPort">ポート番号</label>
-                <input type="text" id="serverPort" placeholder="例: 19132" value="19132">
-            </div>
-
-            <div class="toggle-container">
-                <span class="toggle-label">サーバーの状態を表示する</span>
-                <label class="switch">
-                    <input type="checkbox" id="serverStatusToggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <div class="warning-panel">
-                <strong>注意:</strong> このURLを共有すると、サーバー情報が含まれます。信頼できる相手のみに共有してください。
-            </div>
-
-            <button class="generate-button" id="generateButton">
-                <div class="button-content">
-                    <div class="loading-spinner" id="loadingSpinner"></div>
-                    <span>URLを生成</span>
+        <main role="main">
+            <section class="generator-card" itemscope itemtype="http://schema.org/CreativeWork">
+                <h2 class="visually-hidden">サーバー情報入力フォーム</h2>
+                
+                <div class="form-group">
+                    <label for="serverName">サーバー名</label>
+                    <input type="text" id="serverName" placeholder="例: サンプルサーバー" aria-label="サーバー名">
                 </div>
-            </button>
 
-            <div id="resultContainer" style="display: none;">
-                <h3>生成されたURL</h3>
-                <p>このURLを共有すると、サーバー情報が自動入力された状態で接続ガイドが表示されます</p>
-
-                <div class="result-panel">
-                    <div class="result-url" id="generatedUrl"></div>
-                    <button class="copy-button" id="copyUrlButton">URLをコピー</button>
+                <div class="form-group">
+                    <label for="serverIP">IPアドレス</label>
+                    <input type="text" id="serverIP" placeholder="例: 123.45.67.89 または mc.example.com" aria-label="サーバーのIPアドレスまたはドメイン名">
                 </div>
-            </div>
-        </div>
 
-        <div class="footer">
+                <div class="form-group">
+                    <label for="serverPort">ポート番号</label>
+                    <input type="text" id="serverPort" placeholder="例: 19132" value="19132" aria-label="サーバーのポート番号">
+                </div>
+
+                <div class="toggle-container">
+                    <span class="toggle-label">サーバーの状態を表示する</span>
+                    <label class="switch">
+                        <input type="checkbox" id="serverStatusToggle" aria-label="サーバーの状態を表示するかどうか">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="warning-panel" role="alert">
+                    <strong>注意:</strong> このURLを共有すると、サーバー情報が含まれます。信頼できる相手のみに共有してください。
+                </div>
+
+                <button class="generate-button" id="generateButton" aria-label="URLを生成">
+                    <div class="button-content">
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                        <span>URLを生成</span>
+                    </div>
+                </button>
+
+                <div id="resultContainer" style="display: none;" aria-live="polite">
+                    <h3>生成されたURL</h3>
+                    <p>このURLを共有すると、サーバー情報が自動入力された状態で接続ガイドが表示されます</p>
+
+                    <div class="result-panel">
+                        <div class="result-url" id="generatedUrl" itemprop="url"></div>
+                        <button class="copy-button" id="copyUrlButton" aria-label="生成されたURLをクリップボードにコピー">URLをコピー</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer" role="contentinfo">
             <p class="credit">© <span id="currentYear"></span> MinecraftサーバーURL生成ツール - Powered by <a href="https://www.svcn.pgw.jp/" target="_blank" rel="noopener noreferrer">MCEasyLink</a></p>
-        </div>
+            <p><small>当ツールはMojang Studiosの公式サービスではありません。MinecraftはMojang Studiosの登録商標です。</small></p>
+        </footer>
     </div>
 
     <!-- 通知ポップアップ -->
-    <div class="notification" id="notification">コピーしました！</div>
+    <div class="notification" id="notification" role="alert" aria-live="assertive">コピーしました！</div>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -422,6 +474,26 @@
                 notification.classList.remove('show');
             }, 3000);
         }
+
+        // 視覚的に隠すがスクリーンリーダーには読ませるクラス
+        function addVisuallyHiddenClass() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .visually-hidden {
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    padding: 0;
+                    margin: -1px;
+                    overflow: hidden;
+                    clip: rect(0, 0, 0, 0);
+                    white-space: nowrap;
+                    border: 0;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        addVisuallyHiddenClass();
     });
     </script>
 </body>
